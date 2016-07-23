@@ -1,0 +1,23 @@
+You can use three semaphores:
+{ ustomer, which counts waiting customers (excluding the customer in
+the barber chair, who is not waiting),
+{ barber, the number of barbers (0 or 1) who are idle, waiting for
+customers, and
+{ mutex, which is used for mutual exclusion.
+In the solution, a customer entering the shop has to co unt the number
+of waiting customers. If it is less than the number of chairs (take as
+input), he stays; otherwise, he leaves. When the barber opens the shop
+in the morning, he executes the procedure barber, causing him to block
+on the semaphore customers because it is initially 0. The barber then
+goes to sleep. He stays asleep until the rst customer shows up. When a
+customer arrives, Barber serves the customer, starting by acquiring mutex
+to enter a critical region. If another customer enters shortly thereafter,
+he will not be able to do anything until the rst one has released mutex.
+The customer then checks to see if the number of waiting customers is less
+than thenumber of chairs. If not, he releases mutex and leaves without a
+haircut. If there is an available chair, the customer increments an integer
+variable, waiting. Then he does an Up on the semaphore customers, thus
+waking up the barber. When the customer releases mutex, the barber
+grabs it, does some housekeeping, and begins the haircut. When the
+haircut is over, the customer exits the procedure and leaves the shop.
+Nobody is allowed to cut more than once.
